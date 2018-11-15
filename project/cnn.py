@@ -116,7 +116,8 @@ def cnn():
 
     #model.add(Dropout(0.25))
     model.add(Flatten())
-    model.add(Dense(2048, activation='relu')) # bottleneck. Original image 65536 pixels.
+    model.add(Dense(4096, activation='relu')) # bottleneck. Original image 196608 pixels (65536 pixels * 3 channels)
+#    model.add(Dense(2048, activation='relu')) # bottleneck. Original image 65536 pixels.
     model.add(Dense(16384*2, activation='sigmoid'))
 
     model.add(Reshape((8, 8, 512))) # 8*8*512 = 33K

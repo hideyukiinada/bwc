@@ -16,8 +16,6 @@ import numpy as np
 import random
 
 from project.config import load_config
-from project.maddiecnncommon import DogClassIndex
-from project.maddiecnncommon import DogClassMarker
 
 log = logging.getLogger(__name__)
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))  # Change the 2nd arg to INFO to suppress debug logging
