@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+'''Predict if one or more of my 4 dogs are in the photos using the weight saved in training.
+
+__author__ = "Hide Inada"
+__copyright__ = "Copyright 2018, Hide Inada"
+__license__ = "The MIT license"
+__email__ = "hideyuki@gmail.com"
+'''
+import os
+import sys
+import logging
+from pathlib import Path
+
+import numpy as np
+import PIL
+from PIL import Image
+
+from project.config import load_config
+from project.dataload import load_test_set
+from project.dataload import generate_target_image_path_from_source_image_path
+from project.cnn import cnn
+
+log = logging.getLogger(__name__)
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))
+config = load_config()
+
+def cnn_predict():
+    """Predict the class or classes of dogs contain in the dataset using the weight file created in the training session."""
+
+    x_test, source_file_name_list, target_file_name_list = load_test_set()
+
+    model = cnn()
+
+    weight_path = Path(config["weight_file"])
+    if weight_path.exists() is False:
+        log.error("Not found weight file %s. Aborting." % (weight_path))
+        sys.exit(1)
+
+    model.load_weights(weight_path)
+
+    y_predicted = model.predict(x_test)
+    total_count = x_test.shape[0]
+    for i in range(total_count):
+        img = y_predicted[i]
+        img_pil = Image.fromarray(np.uint8(img*255))
+        target_dir = config["predicted_image_directory"]
+        f_predicted = Path(target_dir) / Path(target_file_name_list[i])
+        log.debug("Saving %s" % (f_predicted))
+        img_pil.save(f_predicted)
+
+
+def main():
+    cnn_predict()
+
+
+if __name__ == "__main__":
+    main()

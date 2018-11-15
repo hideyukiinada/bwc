@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+'''Conver grayscale photo to color using CNN based on Keras.
+
+
+Notes
+-----
+
+__author__ = "Hide Inada"
+__copyright__ = "Copyright 2018, Hide Inada"
+__license__ = "The MIT license"
+__email__ = "hideyuki@gmail.com"
+
+'''
+
+import os
+import logging
+from pathlib import Path
+
+from keras.callbacks import TensorBoard
+
+from project.dataload import load_training_set_and_test_set
+from project.cnn import cnn
+from project.config import load_config
+
+log = logging.getLogger(__name__)
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))  # Change the 2nd arg to INFO to suppress debug logging
+config = load_config()
+
+
+def train():
+    """Train the model to identify images of dogs by CNN."""
+
+    x_train, y_train, x_test, y_test, file_name_training_list, file_name_test_list = \
+        load_training_set_and_test_set(
+            test_data_ratio=0.03)  # we have a separate dataset for testing so keeping the test data ratio low
+
+    model = cnn()
+
+    weight_path = Path(config["weight_file"])
+    if weight_path.exists() is False:
+        log.error("Not found weight file %s. Continueing." % (weight_path))
+    else:
+        model.load_weights(weight_path)
+
+    model.fit(x_train, y_train,
+              batch_size=config["batch_size"],
+              epochs=config["number_of_epochs"],
+              verbose=1,
+              validation_data=(x_test, y_test),
+              callbacks=[TensorBoard(log_dir=config["tensorboard_log_directory"])]
+              )
+    score = model.evaluate(x_test, y_test, verbose=0)
+    log.info('Test loss: %f' % (score[0]))
+    log.info('Test accuracy %f' % (score[1]))
+
+    # Save weight
+    weight_path = Path(config["weight_file"])
+    if weight_path.parent.exists() is False:
+        log.info("Not found weight directory %s. Creating." % (weight_path.parent))
+        weight_path.parent.mkdir()
+
+    model.save_weights(weight_path)
+
+
+def main():
+    train()
+
+
+if __name__ == "__main__":
+    main()
