@@ -74,6 +74,7 @@ from keras.layers import Dropout
 from keras.layers import Flatten
 from keras.layers import Conv2D
 from keras.layers import Convolution2DTranspose
+from keras.layers import LeakyReLU
 from keras.layers import MaxPooling2D
 from keras.layers import Reshape
 
@@ -97,24 +98,27 @@ def cnn():
 
     input_shape = (config["image_height"], config["image_width"], config["number_of_channels_in_source_image"])
 
+    # Changes made due to the description in the DCGAN paper:
+    #   No MaxPooling layer. Use Conv2D with strides=2
+    #   Use LeakyReLU with alpha=0.2 inread of ReLU
+    #   Adam learning rate changed to 0.0002 from lr=0.001
+    #   Adam Beta1 to 0.5 from 0.9
     model = Sequential()
-    model.add(Conv2D(8, kernel_size=(7, 7), padding='same', activation='relu',
-                     input_shape=input_shape))
-    model.add(MaxPooling2D(pool_size=(2, 2)))  # To 128x128
+    model.add(Conv2D(8, kernel_size=(7, 7), padding='same', strides=2, input_shape=input_shape))
+    model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(16, kernel_size=(5, 5), padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))  # To 64x64
+    model.add(Conv2D(16, kernel_size=(5, 5), padding='same', strides=2))
+    model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))  # To 32x32
+    model.add(Conv2D(32, kernel_size=(3, 3), padding='same', strides=2))
+    model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(64, kernel_size=(3, 3), padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))  # To 16x16
+    model.add(Conv2D(64, kernel_size=(3, 3), padding='same', strides=2))
+    model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(128, kernel_size=(3, 3), padding='same', activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))  # To 8x8
+    model.add(Conv2D(128, kernel_size=(3, 3), padding='same', strides=2))
+    model.add(LeakyReLU(alpha=0.2))
 
-    #model.add(Dropout(0.25))
     model.add(Flatten())
     model.add(Dense(4096, activation='relu')) # bottleneck. Original image 196608 pixels (65536 pixels * 3 channels)
 #    model.add(Dense(2048, activation='relu')) # bottleneck. Original image 65536 pixels.
@@ -125,27 +129,26 @@ def cnn():
     model.add(Convolution2DTranspose(filters=64,
                             kernel_size=(3, 3),
                             strides=2,
-                            activation='relu',
                             padding='same')) # to 16x16
-
+    model.add(LeakyReLU(alpha=0.2))
 
     model.add(Convolution2DTranspose(filters=32,
                             kernel_size=(3, 3),
                             strides=2,
-                            activation='relu',
                             padding='same')) # to 32x32
+    model.add(LeakyReLU(alpha=0.2))
 
     model.add(Convolution2DTranspose(filters=16,
                             kernel_size=(3, 3),
                             strides=2,
-                            activation='relu',
                             padding='same')) # to 64x64
+    model.add(LeakyReLU(alpha=0.2))
 
     model.add(Convolution2DTranspose(filters=8,
                             kernel_size=(5, 5),
                             strides=2,
-                            activation='relu',
                             padding='same')) # to 128x128
+    model.add(LeakyReLU(alpha=0.2))
 
     model.add(Convolution2DTranspose(filters=3,
                             kernel_size=(7, 7),
@@ -154,8 +157,7 @@ def cnn():
                             padding='same')) # to 256x256
 
     model.compile(loss=keras.losses.mean_squared_error,
-#                  optimizer=keras.optimizers.Adadelta(),
-                  optimizer=keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False),
+                  optimizer=keras.optimizers.Adam(lr=0.0002, beta_1=0.5, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False),
                   metrics=['accuracy'])
 
     return model
