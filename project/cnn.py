@@ -104,47 +104,47 @@ def cnn():
     #   Adam learning rate changed to 0.0002 from lr=0.001
     #   Adam Beta1 to 0.5 from 0.9
     model = Sequential()
-    model.add(Conv2D(8, kernel_size=(7, 7), padding='same', strides=2, input_shape=input_shape))
+    model.add(Conv2D(32, kernel_size=(5, 5), padding='same', strides=2, input_shape=input_shape)) # to 128x128
     model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(16, kernel_size=(5, 5), padding='same', strides=2))
+    model.add(Conv2D(64, kernel_size=(5, 5), padding='same', strides=2)) # to 64x64
     model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(32, kernel_size=(3, 3), padding='same', strides=2))
+    model.add(Conv2D(128, kernel_size=(3, 3), padding='same', strides=2)) # to 32x32
     model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(64, kernel_size=(3, 3), padding='same', strides=2))
+    model.add(Conv2D(256, kernel_size=(3, 3), padding='same', strides=2)) # to 16x16
     model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Conv2D(128, kernel_size=(3, 3), padding='same', strides=2))
+    model.add(Conv2D(512, kernel_size=(3, 3), padding='same', strides=2)) # to 8x8
     model.add(LeakyReLU(alpha=0.2))
 
     model.add(Flatten())
-    model.add(Dense(4096, activation='relu')) # bottleneck. Original image 196608 pixels (65536 pixels * 3 channels)
-#    model.add(Dense(2048, activation='relu')) # bottleneck. Original image 65536 pixels.
+#    model.add(Dense(4096, activation='relu')) # bottleneck. Original image 196608 pixels (65536 pixels * 3 channels)
+    model.add(Dense(2048, activation='relu')) # bottleneck. Original image 65536 pixels.
     model.add(Dense(16384*2, activation='sigmoid'))
 
     model.add(Reshape((8, 8, 512))) # 8*8*512 = 33K
 
-    model.add(Convolution2DTranspose(filters=64,
+    model.add(Convolution2DTranspose(filters=256,
                             kernel_size=(3, 3),
                             strides=2,
                             padding='same')) # to 16x16
     model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Convolution2DTranspose(filters=32,
+    model.add(Convolution2DTranspose(filters=128,
                             kernel_size=(3, 3),
                             strides=2,
                             padding='same')) # to 32x32
     model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Convolution2DTranspose(filters=16,
+    model.add(Convolution2DTranspose(filters=64,
                             kernel_size=(3, 3),
                             strides=2,
                             padding='same')) # to 64x64
     model.add(LeakyReLU(alpha=0.2))
 
-    model.add(Convolution2DTranspose(filters=8,
+    model.add(Convolution2DTranspose(filters=32,
                             kernel_size=(5, 5),
                             strides=2,
                             padding='same')) # to 128x128
