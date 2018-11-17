@@ -6,7 +6,7 @@
   "number_of_channels_in_target_image":{"value":3, "comment":"Number of channels in a target image file. Change to 4 for RGBA"},
 
   "batch_size":{"value":128, "comment":"Size of a batch for training"},
-  "number_of_epochs":{"value":100, "comment":"Number of epochs for training"},
+  "number_of_epochs":{"value":300, "comment":"Number of epochs for training"},
 
   "source_dataset_directory":{"value":"../../dataset/256_gray", "comment":"Directory where source images are located"},
   "target_dataset_directory":{"value":"../../dataset/256", "comment":"Directory where target images are located"},
