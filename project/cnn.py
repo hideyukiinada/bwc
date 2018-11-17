@@ -119,12 +119,21 @@ def cnn():
     model.add(Conv2D(512, kernel_size=(3, 3), padding='same', strides=2)) # to 8x8
     model.add(LeakyReLU(alpha=0.2))
 
+    #model.add(Conv2D(1024, kernel_size=(3, 3), padding='same', strides=2)) # to 4x4
+    #model.add(LeakyReLU(alpha=0.2))
+
     model.add(Flatten())
 #    model.add(Dense(4096, activation='relu')) # bottleneck. Original image 196608 pixels (65536 pixels * 3 channels)
     model.add(Dense(2048, activation='relu')) # bottleneck. Original image 65536 pixels.
     model.add(Dense(16384*2, activation='sigmoid'))
 
     model.add(Reshape((8, 8, 512))) # 8*8*512 = 33K
+
+    #model.add(Convolution2DTranspose(filters=512,
+    #                        kernel_size=(3, 3),
+    #                        strides=2,
+    #                        padding='same')) # to 8x8
+    #model.add(LeakyReLU(alpha=0.2))
 
     model.add(Convolution2DTranspose(filters=256,
                             kernel_size=(3, 3),
