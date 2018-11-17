@@ -123,7 +123,7 @@ def cnn():
     #model.add(LeakyReLU(alpha=0.2))
 
     model.add(Flatten())
-#    model.add(Dense(4096, activation='relu')) # bottleneck. Original image 196608 pixels (65536 pixels * 3 channels)
+#    model.add(Dense(1024, activation='relu')) # bottleneck. Original image 196608 pixels (65536 pixels * 3 channels)
     model.add(Dense(2048, activation='relu')) # bottleneck. Original image 65536 pixels.
     model.add(Dense(16384*2, activation='sigmoid'))
 
