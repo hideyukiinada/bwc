@@ -5,4 +5,4 @@ The goal of this project is to generate a color photo of a human face from a gra
 This project is still in the research phase.
 
 ## Dataset used for training and testing
-I am using UMass [Labeled Faces in the Wild!](http://vis-www.cs.umass.edu/lfw/).
+I am using UMass [Labeled Faces in the Wild!](http://vis-www.cs.umass.edu/lfw/).  Files were resized by 256x256-pixel image.  For input, files were converted to single-channel grayscale images then fed to the script.  The objective of training is to minimize the MSE between a generated color image and an original color image.
