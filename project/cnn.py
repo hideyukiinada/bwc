@@ -9,6 +9,9 @@ Credit
     keras/examples/mnist_denoising_autoencoder.py
     keras/examples/mnist_cnn.py
 
+    I also referred to the DCGAN paper in designing the network architecture:
+    https://arxiv.org/abs/1511.06434
+
 __author__ = "Hide Inada"
 __copyright__ = "Copyright 2018, Hide Inada"
 __license__ = "The MIT license"
@@ -70,12 +73,10 @@ import logging
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.layers import Dropout
 from keras.layers import Flatten
 from keras.layers import Conv2D
 from keras.layers import Convolution2DTranspose
 from keras.layers import LeakyReLU
-from keras.layers import MaxPooling2D
 from keras.layers import Reshape
 
 

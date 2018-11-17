@@ -25,7 +25,7 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "DEBUG"))
 config = load_config()
 
 def cnn_predict():
-    """Predict the class or classes of dogs contain in the dataset using the weight file created in the training session."""
+    """Generate a color image fron a grayscale image photo using the weight file created in the training session."""
 
     x_test, source_file_name_list, target_file_name_list = load_test_set()
 

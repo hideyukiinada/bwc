@@ -28,7 +28,7 @@ config = load_config()
 
 
 def train():
-    """Train the model to identify images of dogs by CNN."""
+    """Train the model to generate a color photo from a grayscale photo by CNN."""
 
     x_train, y_train, x_test, y_test, file_name_training_list, file_name_test_list = \
         load_training_set_and_test_set(
